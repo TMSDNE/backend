@@ -12,7 +12,6 @@ async function loginUser(req, res) {
   if (!username || !password) {
     try {
       await Users.getUserByUsername(username).then(async response => {
-        console.log(response);
         if (response) {
           if (bcrypt.compareSync(username, password)) {
             const token = await generateToken({ username, password });
