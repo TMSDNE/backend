@@ -1,7 +1,11 @@
-const routes = require('express').Router();
+const router = require('express').Router();
 const apiController = require('../controllers/apiController');
-// import the other routers
+const usersRouter = require('./users');
+const authRouter = require('./auth');
 // & use router.use to mount them
+
+router.use('/users', usersRouter);
+router.use('/auth', authRouter);
 
 router.route('/').get(apiController.mainRoute);
 

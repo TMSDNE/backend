@@ -8,6 +8,6 @@ const server = express();
 initServerMiddleware(server);
 
 // router
-server.use('/api', routes);
+server.use('/api', router);
 
 module.exports = server;
