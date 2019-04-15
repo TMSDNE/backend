@@ -3,9 +3,14 @@ module.exports = {
   getUserById,
   insertUser,
   updateUser,
-  deleteUser
+  deleteUser,
+  truncate
 };
 const db = require('../dbConfig');
+
+async function truncate() {
+  return await db('users').truncate();
+}
 
 async function getUserByUsername(username) {
   return await db
