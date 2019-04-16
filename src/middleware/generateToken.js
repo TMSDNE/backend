@@ -1,7 +1,7 @@
 require('dotenv').config();
 const jwt = require('jsonwebtoken');
 
-module.export = function(userData) {
+module.exports = function(userData) {
   const payload = {
     subject: userData.id,
     username: userData.username
