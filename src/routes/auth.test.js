@@ -56,38 +56,39 @@ describe('AUTH ROUTER', () => {
   });
 
   describe('POST ROUTE /REGISTER', () => {
-    it.skip('should return 201 on success', async () => {
+    it('should return 201 on success', async () => {
       const res = await request(server)
         .post(AUTH_API_URL + '/register')
         .send(user);
       expect(res.status).toEqual(201);
     });
 
-    it.skip('should return 404 on fail (user already registered or deleted)', async () => {
+    it('should return 500 on fail (user already registered)', async () => {
+      await createUser();
       const res = await request(server)
         .post(AUTH_API_URL + '/register')
         .send(user);
-      expect(res.status).toEqual(404);
+      expect(res.status).toEqual(500);
     });
 
-    it.skip('should return 400 on fail (not enough info to register an user)', async () => {
+    it('should return 400 on fail (not enough info to register an user)', async () => {
       const res = await request(server)
         .post(AUTH_API_URL + '/register')
         .send({ ...user, password: '' });
       expect(res.status).toEqual(400);
     });
 
-    it.skip('should return message on success', async () => {
+    it('should return message on success', async () => {
       const res = await request(server)
         .post(AUTH_API_URL + '/register')
         .send(user);
       expect(res.body).toEqual({ message: 'User successfully registered!' });
     });
 
-    it.skip('should return message on failure', async () => {
+    it('should return message on failure (no username or password)', async () => {
       const res = await request(server)
         .post(AUTH_API_URL + '/register')
-        .send(user);
+        .send({...user, password: ''});
       expect(res.body).toEqual({ message: 'Cannot register user' });
     });
   });

@@ -15,9 +15,7 @@ async function loginUser(req, res) {
   try {
     await Users.getUserByUsername(username).then(async user => {
       if (user && bcrypt.compareSync(password, user.password)) {
-        console.log("TOKEN:", user && bcrypt.compareSync(password, user.password));
         const token = await generateToken(user);
-        console.log("TOKEN2:", user && bcrypt.compareSync(password, user.password));
         return await res.status(200).json({ token });
       } else {
         return await res.status(404).json({ message: 'No user found!' });
