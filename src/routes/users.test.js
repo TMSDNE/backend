@@ -71,31 +71,56 @@ describe('USERS ROUTER', () => {
   });
 
   describe('PUT ROUTE /PROFILE/UPDATE', () => {
-    it.skip('should return 200', async () => {
+    it('should return 200 on success', async () => {
+      await createUser();
+      const token = generateToken(user);
       const res = await request(server)
         .put(USERS_API_URL + '/profile/update')
+        .set('authorization', token)
         .send({ ...user, username: 'updatedUser' });
+
       expect(res.status).toEqual(200);
     });
 
-    it.skip('should return 404 (no user profile found)', async () => {
+    it('should return 404 on fail (no user profile found)', async () => {
+      const token = generateToken(user);
       const res = await request(server)
         .put(USERS_API_URL + '/profile/update')
+        .set('authorization', token)
         .send({ ...user, username: 'updatedUser' });
+        
       expect(res.status).toEqual(404);
     });
 
-    it.skip('should return a message on success', async () => {
+    it('should return 400 on fail (no username or password)', async () => {
+      await createUser();
+      const token = generateToken(user);
       const res = await request(server)
         .put(USERS_API_URL + '/profile/update')
+        .set('authorization', token)
+        .send({ ...user, username: '' });
+
+      expect(res.status).toEqual(400);
+    });
+
+    it('should return a message on success', async () => {
+      await createUser();
+      const token = generateToken(user);
+      const res = await request(server)
+        .put(USERS_API_URL + '/profile/update')
+        .set('authorization', token)
         .send({ ...user, username: 'updatedUser' });
+
       expect(res.body).toEqual({ message: 'User profile updated!' });
     });
 
-    it.skip('should return a message on fail', async () => {
+    it('should return a message on fail', async () => {
+      const token = generateToken(user);
       const res = await request(server)
         .put(USERS_API_URL + '/profile/update')
+        .set('authorization', token)
         .send({ ...user, username: 'updatedUser' });
+
       expect(res.body).toEqual({ message: 'User profile not found!' });
     });
   });
