@@ -3,6 +3,6 @@ const articleController = require('../controllers/articleController');
 // import the other routers
 // & use router.use to mount them
 
-router.route('/').get(articleController.mainRoute);
+router.route('/').post(articleController.makeArticle);
 
 module.exports = router;
