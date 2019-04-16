@@ -33,6 +33,10 @@ async function registerUser(req, res) {
   try {
     let hashedPassword = bcrypt.hashSync(password, 10);
     password = hashedPassword;
+
+    const user = await Users.getUserByUsername(username);
+    if(user !== undefined) throw error;
+
     await Users.insertUser({ username, password });
     return res.status(201).json({ message: 'User successfully registered!' });
   } catch (error) {

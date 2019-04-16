@@ -35,5 +35,13 @@ async function updateProfile(req, res) {
 }
 
 async function deleteProfile(req, res) {
-  await res.status(200).json({ message: 'DELETE PROFILE OK' });
+  try {
+    const userID = req.decoded.subject;
+    const user = await Users.getUserById(userID);
+    const result = await Users.deleteUser(userID);
+    if(user === 0 || result === 0) throw err;
+    return await res.status(200).json({message: 'User successfully deleted!'});
+  } catch(err) {
+    return await res.status(404).json({ message: 'User not found!' });
+  }
 }

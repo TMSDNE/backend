@@ -65,9 +65,11 @@ describe('AUTH ROUTER', () => {
 
     it('should return 500 on fail (user already registered)', async () => {
       await createUser();
+
       const res = await request(server)
         .post(AUTH_API_URL + '/register')
         .send(user);
+      
       expect(res.status).toEqual(500);
     });
 

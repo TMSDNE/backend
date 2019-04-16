@@ -33,7 +33,7 @@ describe('USERS ROUTER', () => {
   describe('GET ROUTE /PROFILE', () => {
     it('should return 200 on success', async () => {
       await createUser();
-      const token = generateToken(user);
+      const token = await generateToken(user);
       const res = await request(server)
         .get(USERS_API_URL + '/profile')
         .set('authorization', token);
@@ -42,7 +42,7 @@ describe('USERS ROUTER', () => {
     });
 
     it('should return 404 on fail (no user profile found)', async () => {
-      const token = generateToken(user);
+      const token = await generateToken(user);
       const res = await request(server)
         .get(USERS_API_URL + '/profile')
         .set('authorization', token);
@@ -52,7 +52,7 @@ describe('USERS ROUTER', () => {
 
     it('should return the user data', async () => {
       await createUser();
-      const token = generateToken(user);
+      const token = await generateToken(user);
       const res = await request(server)
         .get(USERS_API_URL + '/profile')
         .set('authorization', token);
@@ -61,7 +61,7 @@ describe('USERS ROUTER', () => {
     });
 
     it('should return a message on fail', async () => {
-      const token = generateToken(user);
+      const token = await generateToken(user);
       const res = await request(server)
         .get(USERS_API_URL + '/profile')
         .set('authorization', token);
@@ -73,7 +73,7 @@ describe('USERS ROUTER', () => {
   describe('PUT ROUTE /PROFILE/UPDATE', () => {
     it('should return 200 on success', async () => {
       await createUser();
-      const token = generateToken(user);
+      const token = await generateToken(user);
       const res = await request(server)
         .put(USERS_API_URL + '/profile/update')
         .set('authorization', token)
@@ -83,7 +83,7 @@ describe('USERS ROUTER', () => {
     });
 
     it('should return 404 on fail (no user profile found)', async () => {
-      const token = generateToken(user);
+      const token = await generateToken(user);
       const res = await request(server)
         .put(USERS_API_URL + '/profile/update')
         .set('authorization', token)
@@ -94,7 +94,7 @@ describe('USERS ROUTER', () => {
 
     it('should return 400 on fail (no username or password)', async () => {
       await createUser();
-      const token = generateToken(user);
+      const token = await generateToken(user);
       const res = await request(server)
         .put(USERS_API_URL + '/profile/update')
         .set('authorization', token)
@@ -105,7 +105,7 @@ describe('USERS ROUTER', () => {
 
     it('should return a message on success', async () => {
       await createUser();
-      const token = generateToken(user);
+      const token = await generateToken(user);
       const res = await request(server)
         .put(USERS_API_URL + '/profile/update')
         .set('authorization', token)
@@ -115,7 +115,7 @@ describe('USERS ROUTER', () => {
     });
 
     it('should return a message on fail', async () => {
-      const token = generateToken(user);
+      const token = await generateToken(user);
       const res = await request(server)
         .put(USERS_API_URL + '/profile/update')
         .set('authorization', token)
@@ -125,31 +125,41 @@ describe('USERS ROUTER', () => {
     });
   });
   describe('DELETE ROUTE /PROFILE/DELETE', () => {
-    it.skip('should return 200 on success', async () => {
+    it('should return 200 on success', async () => {
+      await createUser();
+      const token = await generateToken(user);
       const res = await request(server)
         .delete(USERS_API_URL + '/profile/delete')
-        .send({ id: 1 });
+        .set('authorization', token);
+
       expect(res.status).toEqual(200);
     });
 
-    it.skip('should return 404 on fail', async () => {
+    it('should return 404 on fail', async () => {
+      const token = await generateToken(user);
       const res = await request(server)
         .delete(USERS_API_URL + '/profile/delete')
-        .send({ id: 123 });
+        .set('authorization', token);
+        
       expect(res.status).toEqual(404);
     });
 
-    it.skip('should return a message on success', async () => {
+    it('should return a message on success', async () => {
+      await createUser();
+      const token = await generateToken(user);
       const res = await request(server)
         .delete(USERS_API_URL + '/profile/delete')
-        .send({ id: 1 });
+        .set('authorization', token);
+        
       expect(res.body).toEqual({ message: 'User successfully deleted!' });
     });
 
-    it.skip('should return a message on failure', async () => {
+    it('should return a message on failure', async () => {
+      const token = await generateToken(user);
       const res = await request(server)
         .delete(USERS_API_URL + '/profile/delete')
-        .send({ id: 123 });
+        .set('authorization', token);
+        
       expect(res.body).toEqual({ message: 'User not found!' });
     });
   });
