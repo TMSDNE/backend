@@ -1,8 +1,9 @@
 const router = require('express').Router();
 const usersController = require('../controllers/usersController');
-// import the other routers
-// & use router.use to mount them
+const authenticate = require('../middleware/authenticate');
 
-router.route('/').get(usersController.mainRoute);
+router.route('/profile').get(authenticate, usersController.getProfile);
+router.route('/profile/update').put(authenticate, usersController.updateProfile);
+router.route('/profile/delete').delete(authenticate, usersController.deleteProfile);
 
 module.exports = router;

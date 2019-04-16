@@ -1,100 +1,165 @@
 const request = require('supertest');
 const server = require('../server');
+const generateToken = require('../middleware/generateToken');
+const Users = require('../database/helpers/users');
 
+const AUTH_API_URL = '/api/auth';
 const USERS_API_URL = '/api/users';
 
 const user = {
-  id: 0,
+  id: 1,
   username: 'user',
   password: 'password'
 };
 
+afterEach(async () => {
+  await Users.truncate();
+});
+
+beforeEach(async () => {
+  await Users.truncate();
+});
+
+async function createUser() {
+  await request(server)
+    .post(AUTH_API_URL + '/register')
+    .send({
+      username: user.username,
+      password: user.password
+    });
+}
+
 describe('USERS ROUTER', () => {
   describe('GET ROUTE /PROFILE', () => {
-    it.skip('should return 200 on success', async () => {
+    it('should return 200 on success', async () => {
+      await createUser();
+      const token = await generateToken(user);
       const res = await request(server)
         .get(USERS_API_URL + '/profile')
-        .send({ id: 0 });
+        .set('authorization', token);
+
       expect(res.status).toEqual(200);
     });
 
-    it.skip('should return 404 on fail (no user profile found)', async () => {
+    it('should return 404 on fail (no user profile found)', async () => {
+      const token = await generateToken(user);
       const res = await request(server)
         .get(USERS_API_URL + '/profile')
-        .send({ id: 123 });
+        .set('authorization', token);
+        
       expect(res.status).toEqual(404);
     });
 
-    it.skip('should return the user data', async () => {
+    it('should return the user data', async () => {
+      await createUser();
+      const token = await generateToken(user);
       const res = await request(server)
         .get(USERS_API_URL + '/profile')
-        .send({ id: 0 });
-      expect(res.body).toEqual({ username: 'user' });
+        .set('authorization', token);
+
+      expect(res.body).toEqual({ id: user.id, username: user.username });
     });
 
-    it.skip('should return a message on fail', async () => {
+    it('should return a message on fail', async () => {
+      const token = await generateToken(user);
       const res = await request(server)
         .get(USERS_API_URL + '/profile')
-        .send({ id: 123 });
+        .set('authorization', token);
+
       expect(res.body).toEqual({ message: 'User profile not found!' });
     });
   });
 
   describe('PUT ROUTE /PROFILE/UPDATE', () => {
-    it.skip('should return 200', async () => {
+    it('should return 200 on success', async () => {
+      await createUser();
+      const token = await generateToken(user);
       const res = await request(server)
         .put(USERS_API_URL + '/profile/update')
+        .set('authorization', token)
         .send({ ...user, username: 'updatedUser' });
+
       expect(res.status).toEqual(200);
     });
 
-    it.skip('should return 404 (no user profile found)', async () => {
+    it('should return 404 on fail (no user profile found)', async () => {
+      const token = await generateToken(user);
       const res = await request(server)
         .put(USERS_API_URL + '/profile/update')
+        .set('authorization', token)
         .send({ ...user, username: 'updatedUser' });
+        
       expect(res.status).toEqual(404);
     });
 
-    it.skip('should return a message on success', async () => {
+    it('should return 400 on fail (no username or password)', async () => {
+      await createUser();
+      const token = await generateToken(user);
       const res = await request(server)
         .put(USERS_API_URL + '/profile/update')
+        .set('authorization', token)
+        .send({ ...user, username: '' });
+
+      expect(res.status).toEqual(400);
+    });
+
+    it('should return a message on success', async () => {
+      await createUser();
+      const token = await generateToken(user);
+      const res = await request(server)
+        .put(USERS_API_URL + '/profile/update')
+        .set('authorization', token)
         .send({ ...user, username: 'updatedUser' });
+
       expect(res.body).toEqual({ message: 'User profile updated!' });
     });
 
-    it.skip('should return a message on fail', async () => {
+    it('should return a message on fail', async () => {
+      const token = await generateToken(user);
       const res = await request(server)
         .put(USERS_API_URL + '/profile/update')
+        .set('authorization', token)
         .send({ ...user, username: 'updatedUser' });
+
       expect(res.body).toEqual({ message: 'User profile not found!' });
     });
   });
   describe('DELETE ROUTE /PROFILE/DELETE', () => {
-    it.skip('should return 200 on success', async () => {
+    it('should return 200 on success', async () => {
+      await createUser();
+      const token = await generateToken(user);
       const res = await request(server)
         .delete(USERS_API_URL + '/profile/delete')
-        .send({ id: 0 });
+        .set('authorization', token);
+
       expect(res.status).toEqual(200);
     });
 
-    it.skip('should return 404 on fail', async () => {
+    it('should return 404 on fail', async () => {
+      const token = await generateToken(user);
       const res = await request(server)
         .delete(USERS_API_URL + '/profile/delete')
-        .send({ id: 123 });
+        .set('authorization', token);
+        
       expect(res.status).toEqual(404);
     });
 
-    it.skip('should return a message on success', async () => {
+    it('should return a message on success', async () => {
+      await createUser();
+      const token = await generateToken(user);
       const res = await request(server)
         .delete(USERS_API_URL + '/profile/delete')
-        .send({ id: 0 });
+        .set('authorization', token);
+        
       expect(res.body).toEqual({ message: 'User successfully deleted!' });
     });
 
-    it.skip('should return a message on failure', async () => {
+    it('should return a message on failure', async () => {
+      const token = await generateToken(user);
       const res = await request(server)
         .delete(USERS_API_URL + '/profile/delete')
-        .send({ id: 123 });
+        .set('authorization', token);
+        
       expect(res.body).toEqual({ message: 'User not found!' });
     });
   });

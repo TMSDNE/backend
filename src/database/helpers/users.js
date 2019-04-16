@@ -4,6 +4,7 @@ module.exports = {
   insertUser,
   updateUser,
   deleteUser,
+  removeUser,
   truncate
 };
 const db = require('../dbConfig');
@@ -22,14 +23,20 @@ async function getUserByUsername(username) {
 
 async function getUserById(id) {
   return await db
-    .select('username')
+    .select('id', 'username')
     .from('users')
     .where({ id })
     .first();
 }
 
 async function insertUser(user) {
-  return await db('users').insert({ username: user.username, password: user.password });
+  return await db('users')
+    .insert({ username: user.username, password: user.password })
+    .then(response => {
+      return {
+        id: response[0]
+      }
+    })
 }
 
 async function updateUser(id, user) {
@@ -39,6 +46,12 @@ async function updateUser(id, user) {
 }
 
 async function deleteUser(id) {
+  return await db('users')
+    .where({ id })
+    .update({ deleted: true });
+}
+
+async function removeUser(id) {
   return await db('users')
     .where({ id })
     .del();
