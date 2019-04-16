@@ -1,8 +1,7 @@
 const router = require('express').Router();
 const articleController = require('../controllers/articleController');
-// import the other routers
-// & use router.use to mount them
+const authenticate = require('../middleware/authenticate');
 
-router.route('/').post(articleController.makeArticle);
+router.route('/').post(authenticate, articleController.makeArticle);
 
 module.exports = router;

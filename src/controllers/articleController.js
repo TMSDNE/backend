@@ -6,6 +6,8 @@ const axios = require('axios');
 const DS_API_URL = '';
 
 async function makeArticle(req, res) {
+  const { timestamp } = req.body;
+  if(!timestamp) return await res.status(500).json({ message: "Error. Couldn't retrieve articles" });
   // await axios({
   //   method: 'post',
   //   url: DS_API_URL,
