@@ -4,7 +4,7 @@ const server = require('../server');
 const USERS_API_URL = '/api/users';
 
 const user = {
-  id: 0,
+  id: 1,
   username: 'user',
   password: 'password'
 };
@@ -14,7 +14,7 @@ describe('USERS ROUTER', () => {
     it.skip('should return 200 on success', async () => {
       const res = await request(server)
         .get(USERS_API_URL + '/profile')
-        .send({ id: 0 });
+        .send({ id: 1 });
       expect(res.status).toEqual(200);
     });
 
@@ -28,7 +28,7 @@ describe('USERS ROUTER', () => {
     it.skip('should return the user data', async () => {
       const res = await request(server)
         .get(USERS_API_URL + '/profile')
-        .send({ id: 0 });
+        .send({ id: 1 });
       expect(res.body).toEqual({ username: 'user' });
     });
 
@@ -73,7 +73,7 @@ describe('USERS ROUTER', () => {
     it.skip('should return 200 on success', async () => {
       const res = await request(server)
         .delete(USERS_API_URL + '/profile/delete')
-        .send({ id: 0 });
+        .send({ id: 1 });
       expect(res.status).toEqual(200);
     });
 
@@ -87,7 +87,7 @@ describe('USERS ROUTER', () => {
     it.skip('should return a message on success', async () => {
       const res = await request(server)
         .delete(USERS_API_URL + '/profile/delete')
-        .send({ id: 0 });
+        .send({ id: 1 });
       expect(res.body).toEqual({ message: 'User successfully deleted!' });
     });
 
