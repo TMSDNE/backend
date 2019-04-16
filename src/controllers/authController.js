@@ -19,7 +19,7 @@ async function loginUser(req, res) {
       return await res.status(200).json({ token });
     } else {
       return await res.status(404).json({ message: 'No user found!' });
-    };
+    }
   } catch (error) {
     return await res.status(500).json({ error });
   }
@@ -28,18 +28,18 @@ async function loginUser(req, res) {
 async function registerUser(req, res) {
   let { username, password } = req.body;
   if (!username || !password) {
-    return await res.status(400).json({ message: 'Cannot register user' });  
+    return await res.status(400).json({ message: 'Cannot register user' });
   }
   try {
     let hashedPassword = bcrypt.hashSync(password, 10);
     password = hashedPassword;
 
     const user = await Users.getUserByUsername(username);
-    if(user !== undefined) throw error;
+    if (user !== undefined) throw new Error('User already registed!');
 
     await Users.insertUser({ username, password });
     return res.status(201).json({ message: 'User successfully registered!' });
   } catch (error) {
-    return await res.status(500).json({ error });
-  }  
+    return await res.status(500).json({ error: error.message });
+  }
 }
