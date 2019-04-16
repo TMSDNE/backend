@@ -14,7 +14,7 @@ async function truncate() {
 
 async function getUserByUsername(username) {
   return await db
-    .select('username')
+    .select('*')
     .from('users')
     .where({ username })
     .first();
