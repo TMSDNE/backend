@@ -17,15 +17,15 @@ beforeEach(async () => {
 });
 
 async function createUser() {
-  // await request(server)
-  //   .post(AUTH_API_URL + '/register')
-  //   .send(user);
+  await request(server)
+    .post(AUTH_API_URL + '/register')
+    .send(user);
 }
 
 describe('AUTH ROUTER', () => {
   describe('POST ROUTE /LOGIN', () => {
     it('should return 200 on success', async () => {
-      // await createUser();
+      await createUser();
       const res = await request(server)
         .post(AUTH_API_URL + '/login')
         .send(user);
@@ -40,10 +40,11 @@ describe('AUTH ROUTER', () => {
     });
 
     it('should return a token on success', async () => {
+      await createUser();
       const res = await request(server)
         .post(AUTH_API_URL + '/login')
         .send(user);
-      expect(res.body).toEqual({ token: /^[a-zA-Z0-9_.-]*$/ });
+      expect(/^[A-Za-z0-9-_=]+\.[A-Za-z0-9-_=]+\.?[A-Za-z0-9-_.+/=]*$/.test(res.body.token)).toBe(true);
     });
 
     it('should return a message on fail', async () => {
@@ -62,11 +63,12 @@ describe('AUTH ROUTER', () => {
       expect(res.status).toEqual(201);
     });
 
-    it('should return 404 on fail (user already registered or deleted)', async () => {
+    it('should return 500 on fail (user already registered)', async () => {
+      await createUser();
       const res = await request(server)
         .post(AUTH_API_URL + '/register')
         .send(user);
-      expect(res.status).toEqual(404);
+      expect(res.status).toEqual(500);
     });
 
     it('should return 400 on fail (not enough info to register an user)', async () => {
@@ -83,10 +85,10 @@ describe('AUTH ROUTER', () => {
       expect(res.body).toEqual({ message: 'User successfully registered!' });
     });
 
-    it('should return message on failure', async () => {
+    it('should return message on failure (no username or password)', async () => {
       const res = await request(server)
         .post(AUTH_API_URL + '/register')
-        .send(user);
+        .send({...user, password: ''});
       expect(res.body).toEqual({ message: 'Cannot register user' });
     });
   });
