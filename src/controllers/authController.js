@@ -13,14 +13,13 @@ async function loginUser(req, res) {
     return await res.status(404).json({ message: 'Login failed. Wrong credentials.' });
   }
   try {
-    await Users.getUserByUsername(username).then(async user => {
-      if (user && bcrypt.compareSync(password, user.password)) {
-        const token = await generateToken(user);
-        return await res.status(200).json({ token });
-      } else {
-        return await res.status(404).json({ message: 'No user found!' });
-      }
-    });
+    let user = await Users.getUserByUsername(username);
+    if (user && bcrypt.compareSync(password, user.password)) {
+      const token = await generateToken(user);
+      return await res.status(200).json({ token });
+    } else {
+      return await res.status(404).json({ message: 'No user found!' });
+    };
   } catch (error) {
     return await res.status(500).json({ error });
   }
