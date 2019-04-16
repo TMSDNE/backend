@@ -22,7 +22,7 @@ async function getUserByUsername(username) {
 
 async function getUserById(id) {
   return await db
-    .select('username')
+    .select('id', 'username')
     .from('users')
     .where({ id })
     .first();

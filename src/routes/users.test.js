@@ -1,6 +1,9 @@
 const request = require('supertest');
 const server = require('../server');
+const generateToken = require('../middleware/generateToken');
+const Users = require('../database/helpers/users');
 
+const AUTH_API_URL = '/api/auth';
 const USERS_API_URL = '/api/users';
 
 const user = {
@@ -9,33 +12,60 @@ const user = {
   password: 'password'
 };
 
+afterEach(async () => {
+  await Users.truncate();
+});
+
+beforeEach(async () => {
+  await Users.truncate();
+});
+
+async function createUser() {
+  await request(server)
+    .post(AUTH_API_URL + '/register')
+    .send({
+      username: user.username,
+      password: user.password
+    });
+}
+
 describe('USERS ROUTER', () => {
   describe('GET ROUTE /PROFILE', () => {
-    it.skip('should return 200 on success', async () => {
+    it('should return 200 on success', async () => {
+      await createUser();
+      const token = generateToken(user);
       const res = await request(server)
         .get(USERS_API_URL + '/profile')
-        .send({ id: 1 });
+        .set('authorization', token);
+
       expect(res.status).toEqual(200);
     });
 
-    it.skip('should return 404 on fail (no user profile found)', async () => {
+    it('should return 404 on fail (no user profile found)', async () => {
+      const token = generateToken(user);
       const res = await request(server)
         .get(USERS_API_URL + '/profile')
-        .send({ id: 123 });
+        .set('authorization', token);
+        
       expect(res.status).toEqual(404);
     });
 
-    it.skip('should return the user data', async () => {
+    it('should return the user data', async () => {
+      await createUser();
+      const token = generateToken(user);
       const res = await request(server)
         .get(USERS_API_URL + '/profile')
-        .send({ id: 1 });
-      expect(res.body).toEqual({ username: 'user' });
+        .set('authorization', token);
+
+      expect(res.body).toEqual({ id: user.id, username: user.username });
     });
 
-    it.skip('should return a message on fail', async () => {
+    it('should return a message on fail', async () => {
+      const token = generateToken(user);
       const res = await request(server)
         .get(USERS_API_URL + '/profile')
-        .send({ id: 123 });
+        .set('authorization', token);
+
       expect(res.body).toEqual({ message: 'User profile not found!' });
     });
   });
