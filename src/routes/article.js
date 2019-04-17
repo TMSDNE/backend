@@ -1,8 +1,7 @@
 const router = require('express').Router();
 const articleController = require('../controllers/articleController');
-// import the other routers
-// & use router.use to mount them
+const cache = require('../middleware/redisMiddleware');
 
-router.route('/').post(articleController.makeArticle);
+router.route('/').post(cache, articleController.makeArticle);
 
 module.exports = router;

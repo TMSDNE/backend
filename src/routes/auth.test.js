@@ -17,7 +17,7 @@ beforeEach(async () => {
 });
 
 async function createUser() {
-  await request(server)
+  return await request(server)
     .post(AUTH_API_URL + '/register')
     .send(user);
 }
@@ -66,9 +66,10 @@ describe('AUTH ROUTER', () => {
     it('should return 500 on fail (user already registered)', async () => {
       await createUser();
 
-      const res = await request(server)
-        .post(AUTH_API_URL + '/register')
-        .send(user);
+      // const res = await request(server)
+      //   .post(AUTH_API_URL + '/register')
+      //   .send(user);
+      const res = await createUser();
       
       expect(res.status).toEqual(500);
     });
@@ -76,7 +77,7 @@ describe('AUTH ROUTER', () => {
     it('should return 400 on fail (not enough info to register an user)', async () => {
       const res = await request(server)
         .post(AUTH_API_URL + '/register')
-        .send({ ...user, password: '' });
+        .send({ username: user.username, password: '' });
       expect(res.status).toEqual(400);
     });
 
