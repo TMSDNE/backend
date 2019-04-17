@@ -3,5 +3,5 @@ module.exports = {
 };
 
 async function mainRoute(req, res) {
-  await res.status(200).json({ message: 'API OK' });
+  await res.status(200).send({ message: 'API OK' });
 }
