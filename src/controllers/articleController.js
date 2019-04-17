@@ -19,22 +19,20 @@ async function makeArticle(req, res) {
   // .then(response => {
   //   if(response === 0) return await res.status(500).json({ message: 'No article' });
   //   const article = {
-  //     title: response.title,
-  //     text: response.text,
-  //     img: response.img,
-  //     category: response.category
+  //     successful: response.successful,
+  //     commentary: response.commentary,
+  //     graph_url: response.graph_url
   //   }
   //   return res.status(200).json(article);
   // });
 
   const article = {
-    title: 'Default title',
-    text:
+    successful: true,
+    commentary:
       'Economy exchange traded funds prices fiat holder volatile market maturities finance index funds interest rate. Improve 401k fall bonds municipal yield called. Corporation notes capital NYSE hedge fund bondholders taxpayer. Market index bull federal. Fall Nikkei debt credit appeal.',
     img: 'https://picsum.photos/400?random',
-    category: 'Finance'
+    graph_url: 'https://www.google.com/'
   };
-
   redis.setex(`${timestamp}`, 3600, JSON.stringify(article));
   res.status(200).json(JSON.parse(article));
 }
