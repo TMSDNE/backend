@@ -5,9 +5,12 @@ module.exports = {
 const axios = require('axios');
 const DS_API_URL = '';
 const redis = require('../middleware/redisMiddleware');
+const Articles = require('../database/helpers/articles');
 
 async function makeArticle(req, res) {
   const { timestamp } = req.body;
+  const { user_id } = req.headers;
+
   if(!timestamp) return await res.status(500).json({ message: "Error. Couldn't retrieve articles" });
   // await axios({
   //   method: 'post',
@@ -16,14 +19,21 @@ async function makeArticle(req, res) {
   //     timestamp: req.body.timestamp
   //   }
   // })
-  // .then(response => {
+  // .then(async response => {
   //   if(response === 0) return await res.status(500).json({ message: 'No article' });
   //   const article = {
   //     successful: response.successful,
   //     commentary: response.commentary,
   //     graph_url: response.graph_url
   //   }
-  //   return res.status(200).json(article);
+  //   return article;
+  // })
+  // .then(async response => {
+  //   if(user_id) {
+  //     await Articles.addArticle(response, user_id);
+  //   }
+
+  //   return res.status(200).json(response);
   // });
 
   const article = {
