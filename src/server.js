@@ -9,7 +9,7 @@ const server = express();
 initServerMiddleware(server);
 
 // router
-server.use('/', rootRoute);
 server.use('/api', router);
+server.get('/', rootRoute);
 
 module.exports = server;
