@@ -14,7 +14,7 @@ async function loginUser(req, res) {
   }
   try {
     let user = await Users.getUserByUsername(username);
-    if (user && bcrypt.compareSync(password, user.password)) {
+    if (user && !user.deleted && bcrypt.compareSync(password, user.password)) {
       const token = await generateToken(user);
       return await res.status(200).json({ token });
     } else {
@@ -35,7 +35,7 @@ async function registerUser(req, res) {
     password = hashedPassword;
 
     const user = await Users.getUserByUsername(username);
-    if (user !== undefined) throw new Error('User already registed!');
+    if (user !== undefined) throw new Error('User already registered!');
 
     await Users.insertUser({ username, password });
     return res.status(201).json({ message: 'User successfully registered!' });
