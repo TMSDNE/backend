@@ -4,6 +4,7 @@ module.exports = {
 
 const axios = require('axios');
 const DS_API_URL = '';
+const redis = require('../middleware/redisMiddleware');
 
 async function makeArticle(req, res) {
   const { timestamp } = req.body;
@@ -26,11 +27,14 @@ async function makeArticle(req, res) {
   //   return res.status(200).json(article);
   // });
 
-  res.status(200).json({
+  const article = {
     title: 'Default title',
     text:
       'Economy exchange traded funds prices fiat holder volatile market maturities finance index funds interest rate. Improve 401k fall bonds municipal yield called. Corporation notes capital NYSE hedge fund bondholders taxpayer. Market index bull federal. Fall Nikkei debt credit appeal.',
     img: 'https://picsum.photos/400?random',
     category: 'Finance'
-  });
+  };
+
+  redis.setex(`${timestamp}`, 3600, JSON.stringify(article));
+  res.status(200).json(JSON.parse(article));
 }
