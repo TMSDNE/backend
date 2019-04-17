@@ -1,7 +1,9 @@
 module.exports = {
     truncate,
+    addArticle,
     getArticleById,
-    getArticlesByUserId
+    getArticlesByUserId,
+    getArticleByTimestamp
 };
 const db = require('../dbConfig');
 
@@ -28,6 +30,13 @@ async function getArticleById(id) {
 
 async function getArticlesByUserId(user_id) {
   return await db('articles')
-  .select('**')
+  .select('*')
   .where({user_id})
+}
+
+async function getArticleByTimestamp(timestamp) {
+  return await db('articles')
+  .select('*')
+  .where({date: timestamp})
+  .last()
 }

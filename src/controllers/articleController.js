@@ -12,6 +12,8 @@ async function makeArticle(req, res) {
   const { user_id } = req.headers;
 
   if(!timestamp) return await res.status(500).json({ message: "Error. Couldn't retrieve articles" });
+  const searchedArticle = await Articles.getArticleByTimestamp(timestamp);
+  if(!searchedArticle) {
   // await axios({
   //   method: 'post',
   //   url: DS_API_URL,
@@ -35,6 +37,10 @@ async function makeArticle(req, res) {
 
   //   return res.status(200).json(response);
   // });
+  } else {
+    redis.setex(`${timestamp}`, 3600, JSON.stringify(searchedArticle));
+    res.status(200).json(JSON.parse(searchedArticle));
+  }
 
   const article = {
     successful: true,
