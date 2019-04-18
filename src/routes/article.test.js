@@ -60,7 +60,11 @@ describe('ARTICLES ROUTER', () => {
         .post(ARTICLES_API_URL + '/')
         .set('authorization', token)
         .send({ timestamp });
-      expect(res.body).toEqual(article);
+      
+      expect(res.body.successful).toEqual(true);
+      expect(res.body.commentary.length > 0).toEqual(true);
+      expect(res.body.graph_url.length > 0).toEqual(true);
+      expect(res.body.date).toEqual(timestamp);
     });
 
     it('should return a message on fail', async () => {
