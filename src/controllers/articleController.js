@@ -8,14 +8,6 @@ const DS_API_URL = process.env.DS_API_URL || 'localhost:8080/api';
 const { client } = require('../middleware/redisMiddleware');
 const Articles = require('../database/helpers/articles');
 
-// const article = {
-//   successful: true,
-//   commentary:
-//     'Economy exchange traded funds prices fiat holder volatile market maturities finance index funds interest rate. Improve 401k fall bonds municipal yield called. Corporation notes capital NYSE hedge fund bondholders taxpayer. Market index bull federal. Fall Nikkei debt credit appeal.',
-//   img: 'https://picsum.photos/400?random',
-//   graph_url: 'https://www.google.com/'
-// };
-
 async function makeArticle(req, res) {
   const { timestamp } = req.body;
   const { user_id } = req.headers;
@@ -32,13 +24,13 @@ async function makeArticle(req, res) {
         }
       })
       .then(async response => {
-        if(response === 0 || !response.data.successful || response.data.results.length === 0) return await res.status(500).json({ message: 'No article' });
+        if(response === 0 || !response.data.successful) return await res.status(500).json({ message: 'No article' });
 
         const article = {
           successful: response.data.successful,
-          commentary: response.data.results[0].commentary,
-          // graph_url: response.results[0].graph_url,
-          date: response.data.results[0].date
+          commentary: response.data.results.commentary,
+          graph_url: response.data.results.graph_url,
+          date: response.data.results.date
         }
         return article;
       })
