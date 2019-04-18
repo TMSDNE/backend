@@ -3,8 +3,9 @@ require('dotenv').config();
 
 const redisPort = process.env.REDIS_PORT || 6379;
 const redisHost = process.env.REDIS_HOST || '127.0.0.1';
+const redisUrl = process.env.REDIS_URL || 'redis://127.0.0.1:6379';
 
-const client = redis.createClient(redisPort, redisHost);
+const client = redis.createClient(redisUrl);
     client.on('connect', () => {
     console.log('Redis client connected');
 });
