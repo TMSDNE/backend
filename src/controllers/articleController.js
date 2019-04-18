@@ -4,7 +4,7 @@ module.exports = {
 
 const axios = require('axios');
 const DS_API_URL = '';
-// const { client } = require('../middleware/redisMiddleware');
+const { client } = require('../middleware/redisMiddleware');
 const Articles = require('../database/helpers/articles');
 
 async function makeArticle(req, res) {
@@ -34,12 +34,11 @@ async function makeArticle(req, res) {
   //   if(user_id) {
   //     await Articles.addArticle(response, user_id);
   //   }
-
   //   return res.status(200).json(response);
   // });
   } else {
-    // client.set(`${timestamp}`, JSON.stringify(searchedArticle));
-    res.status(200).json(JSON.parse(searchedArticle));
+    await client.set(`${timestamp}`, JSON.stringify(searchedArticle));
+    await res.status(200).json(JSON.parse(client.get(`${timestamp}`));
   }
 
   const article = {
@@ -49,6 +48,6 @@ async function makeArticle(req, res) {
     img: 'https://picsum.photos/400?random',
     graph_url: 'https://www.google.com/'
   };
-  // client.set(`${timestamp}`, JSON.stringify(article));
-  res.status(200).json(JSON.parse(article));
+  await client.set(`${timestamp}`, JSON.stringify(article));
+  await res.status(200).json(article);
 }
