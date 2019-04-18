@@ -2,8 +2,9 @@ module.exports = {
   makeArticle
 };
 
+require('dotenv').config();
 const axios = require('axios');
-const DS_API_URL = '';
+const DS_API_URL = process.env.DS_API_URL || 'localhost:8080/api';
 const { client } = require('../middleware/redisMiddleware');
 const Articles = require('../database/helpers/articles');
 
