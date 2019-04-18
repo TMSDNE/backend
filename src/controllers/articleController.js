@@ -50,5 +50,5 @@ async function makeArticle(req, res) {
     graph_url: 'https://www.google.com/'
   };
   await client.set(`${timestamp}`, JSON.stringify(article));
-  await res.status(200).json(article);
+  await res.status(200).json(JSON.parse(client.get(`${timestamp}`)));
 }
