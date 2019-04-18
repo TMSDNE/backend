@@ -4,7 +4,7 @@ module.exports = {
 
 const axios = require('axios');
 const DS_API_URL = '';
-const { client } = require('../middleware/redisMiddleware');
+// const { client } = require('../middleware/redisMiddleware');
 const Articles = require('../database/helpers/articles');
 
 async function makeArticle(req, res) {
@@ -38,7 +38,7 @@ async function makeArticle(req, res) {
   //   return res.status(200).json(response);
   // });
   } else {
-    client.set(`${timestamp}`, JSON.stringify(searchedArticle));
+    // client.set(`${timestamp}`, JSON.stringify(searchedArticle));
     res.status(200).json(JSON.parse(searchedArticle));
   }
 
@@ -49,6 +49,6 @@ async function makeArticle(req, res) {
     img: 'https://picsum.photos/400?random',
     graph_url: 'https://www.google.com/'
   };
-  client.set(`${timestamp}`, JSON.stringify(article));
+  // client.set(`${timestamp}`, JSON.stringify(article));
   res.status(200).json(JSON.parse(article));
 }
