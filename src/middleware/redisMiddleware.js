@@ -13,7 +13,7 @@ client.on('error', (err) => {
     console.log(`Redis client error: ${err}`);
 });
 
-module.exports = (req, res, next) => {
+function redisMiddleware(req, res, next){
     const { timestamp } = req.body;
     client.get(`${timestamp}`, (err, data) => {
         if (err) throw err;
@@ -24,4 +24,9 @@ module.exports = (req, res, next) => {
             next();
         }
     });
+}
+
+module.exports = {
+    redisMiddleware,
+    client
 }

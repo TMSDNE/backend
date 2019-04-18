@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const articleController = require('../controllers/articleController');
-const cache = require('../middleware/redisMiddleware');
+const { redisMiddleware } = require('../middleware/redisMiddleware');
 
-router.route('/').post(cache, articleController.makeArticle);
+router.route('/').post(redisMiddleware, articleController.makeArticle);
 
 module.exports = router;
