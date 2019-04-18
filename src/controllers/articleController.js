@@ -38,7 +38,7 @@ async function makeArticle(req, res) {
   // });
   } else {
     await client.set(`${timestamp}`, JSON.stringify(searchedArticle));
-    await res.status(200).json(JSON.parse(client.get(`${timestamp}`));
+    await res.status(200).json(JSON.parse(client.get(`${timestamp}`)));
   }
 
   const article = {
