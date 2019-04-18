@@ -38,5 +38,6 @@ async function getArticleByTimestamp(timestamp) {
   return await db('articles')
   .select('*')
   .where({date: timestamp})
-  .last()
+  .orderBy('id', 'desc')
+  .first()
 }
